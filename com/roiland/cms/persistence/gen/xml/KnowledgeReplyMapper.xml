@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.roiland.cms.persistence.gen.mapper.KnowledgeReplyMapper" >
+  <resultMap id="BaseResultMap" type="com.roiland.cms.persistence.gen.model.KnowledgeReply" >
+    <id column="knowledge_reply_id" property="knowledgeReplyId" jdbcType="INTEGER" />
+    <result column="knowledge_id" property="knowledgeId" jdbcType="INTEGER" />
+    <result column="score" property="score" jdbcType="INTEGER" />
+    <result column="reply_appuser_id" property="replyAppuserId" jdbcType="INTEGER" />
+    <result column="reply_date" property="replyDate" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.roiland.cms.persistence.gen.model.KnowledgeReply" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="CLOB" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    knowledge_reply_id, knowledge_id, score, reply_appuser_id, reply_date, status
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.roiland.cms.persistence.gen.model.KnowledgeReplyCriteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from knowledge_reply
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.roiland.cms.persistence.gen.model.KnowledgeReplyCriteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from knowledge_reply
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from knowledge_reply
+    where knowledge_reply_id = #{knowledgeReplyId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from knowledge_reply
+    where knowledge_reply_id = #{knowledgeReplyId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.roiland.cms.persistence.gen.model.KnowledgeReplyCriteria" >
+    delete from knowledge_reply
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.roiland.cms.persistence.gen.model.KnowledgeReply" useGeneratedKeys="true" keyProperty="knowledgeReplyId" >
+    insert into knowledge_reply (knowledge_id, score, reply_appuser_id, 
+      reply_date, status, content
+      )
+    values (#{knowledgeId,jdbcType=INTEGER}, #{score,jdbcType=INTEGER}, #{replyAppuserId,jdbcType=INTEGER}, 
+      #{replyDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{content,jdbcType=CLOB}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.roiland.cms.persistence.gen.model.KnowledgeReply" useGeneratedKeys="true" keyProperty="knowledgeReplyId" >
+    insert into knowledge_reply
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="knowledgeId != null" >
+        knowledge_id,
+      </if>
+      <if test="score != null" >
+        score,
+      </if>
+      <if test="replyAppuserId != null" >
+        reply_appuser_id,
+      </if>
+      <if test="replyDate != null" >
+        reply_date,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="knowledgeId != null" >
+        #{knowledgeId,jdbcType=INTEGER},
+      </if>
+      <if test="score != null" >
+        #{score,jdbcType=INTEGER},
+      </if>
+      <if test="replyAppuserId != null" >
+        #{replyAppuserId,jdbcType=INTEGER},
+      </if>
+      <if test="replyDate != null" >
+        #{replyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=CLOB},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.roiland.cms.persistence.gen.model.KnowledgeReplyCriteria" resultType="java.lang.Integer" >
+    select count(*) from knowledge_reply
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update knowledge_reply
+    <set >
+      <if test="record.knowledgeReplyId != null" >
+        knowledge_reply_id = #{record.knowledgeReplyId,jdbcType=INTEGER},
+      </if>
+      <if test="record.knowledgeId != null" >
+        knowledge_id = #{record.knowledgeId,jdbcType=INTEGER},
+      </if>
+      <if test="record.score != null" >
+        score = #{record.score,jdbcType=INTEGER},
+      </if>
+      <if test="record.replyAppuserId != null" >
+        reply_appuser_id = #{record.replyAppuserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.replyDate != null" >
+        reply_date = #{record.replyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.content != null" >
+        content = #{record.content,jdbcType=CLOB},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map" >
+    update knowledge_reply
+    set knowledge_reply_id = #{record.knowledgeReplyId,jdbcType=INTEGER},
+      knowledge_id = #{record.knowledgeId,jdbcType=INTEGER},
+      score = #{record.score,jdbcType=INTEGER},
+      reply_appuser_id = #{record.replyAppuserId,jdbcType=INTEGER},
+      reply_date = #{record.replyDate,jdbcType=TIMESTAMP},
+      status = #{record.status,jdbcType=INTEGER},
+      content = #{record.content,jdbcType=CLOB}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update knowledge_reply
+    set knowledge_reply_id = #{record.knowledgeReplyId,jdbcType=INTEGER},
+      knowledge_id = #{record.knowledgeId,jdbcType=INTEGER},
+      score = #{record.score,jdbcType=INTEGER},
+      reply_appuser_id = #{record.replyAppuserId,jdbcType=INTEGER},
+      reply_date = #{record.replyDate,jdbcType=TIMESTAMP},
+      status = #{record.status,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.roiland.cms.persistence.gen.model.KnowledgeReply" >
+    update knowledge_reply
+    <set >
+      <if test="knowledgeId != null" >
+        knowledge_id = #{knowledgeId,jdbcType=INTEGER},
+      </if>
+      <if test="score != null" >
+        score = #{score,jdbcType=INTEGER},
+      </if>
+      <if test="replyAppuserId != null" >
+        reply_appuser_id = #{replyAppuserId,jdbcType=INTEGER},
+      </if>
+      <if test="replyDate != null" >
+        reply_date = #{replyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=CLOB},
+      </if>
+    </set>
+    where knowledge_reply_id = #{knowledgeReplyId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.roiland.cms.persistence.gen.model.KnowledgeReply" >
+    update knowledge_reply
+    set knowledge_id = #{knowledgeId,jdbcType=INTEGER},
+      score = #{score,jdbcType=INTEGER},
+      reply_appuser_id = #{replyAppuserId,jdbcType=INTEGER},
+      reply_date = #{replyDate,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      content = #{content,jdbcType=CLOB}
+    where knowledge_reply_id = #{knowledgeReplyId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.roiland.cms.persistence.gen.model.KnowledgeReply" >
+    update knowledge_reply
+    set knowledge_id = #{knowledgeId,jdbcType=INTEGER},
+      score = #{score,jdbcType=INTEGER},
+      reply_appuser_id = #{replyAppuserId,jdbcType=INTEGER},
+      reply_date = #{replyDate,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER}
+    where knowledge_reply_id = #{knowledgeReplyId,jdbcType=INTEGER}
+  </update>
+</mapper>

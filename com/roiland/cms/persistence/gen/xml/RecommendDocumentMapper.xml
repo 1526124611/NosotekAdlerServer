@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.roiland.cms.persistence.gen.mapper.RecommendDocumentMapper" >
+  <resultMap id="BaseResultMap" type="com.roiland.cms.persistence.gen.model.RecommendDocument" >
+    <id column="recommend_document_id" property="recommendDocumentId" jdbcType="INTEGER" />
+    <result column="document_id" property="documentId" jdbcType="VARCHAR" />
+    <result column="cover_store_path" property="coverStorePath" jdbcType="VARCHAR" />
+    <result column="recommend_desc" property="recommendDesc" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_by" property="createBy" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    recommend_document_id, document_id, cover_store_path, recommend_desc, status, create_by, 
+    create_date
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.roiland.cms.persistence.gen.model.RecommendDocumentCriteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from recommend_document
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from recommend_document
+    where recommend_document_id = #{recommendDocumentId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from recommend_document
+    where recommend_document_id = #{recommendDocumentId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.roiland.cms.persistence.gen.model.RecommendDocumentCriteria" >
+    delete from recommend_document
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.roiland.cms.persistence.gen.model.RecommendDocument" useGeneratedKeys="true" keyProperty="recommendDocumentId" >
+    insert into recommend_document (document_id, cover_store_path, recommend_desc, 
+      status, create_by, create_date
+      )
+    values (#{documentId,jdbcType=VARCHAR}, #{coverStorePath,jdbcType=VARCHAR}, #{recommendDesc,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{createBy,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.roiland.cms.persistence.gen.model.RecommendDocument" useGeneratedKeys="true" keyProperty="recommendDocumentId" >
+    insert into recommend_document
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="documentId != null" >
+        document_id,
+      </if>
+      <if test="coverStorePath != null" >
+        cover_store_path,
+      </if>
+      <if test="recommendDesc != null" >
+        recommend_desc,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="documentId != null" >
+        #{documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="coverStorePath != null" >
+        #{coverStorePath,jdbcType=VARCHAR},
+      </if>
+      <if test="recommendDesc != null" >
+        #{recommendDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.roiland.cms.persistence.gen.model.RecommendDocumentCriteria" resultType="java.lang.Integer" >
+    select count(*) from recommend_document
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update recommend_document
+    <set >
+      <if test="record.recommendDocumentId != null" >
+        recommend_document_id = #{record.recommendDocumentId,jdbcType=INTEGER},
+      </if>
+      <if test="record.documentId != null" >
+        document_id = #{record.documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.coverStorePath != null" >
+        cover_store_path = #{record.coverStorePath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.recommendDesc != null" >
+        recommend_desc = #{record.recommendDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.createBy != null" >
+        create_by = #{record.createBy,jdbcType=INTEGER},
+      </if>
+      <if test="record.createDate != null" >
+        create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update recommend_document
+    set recommend_document_id = #{record.recommendDocumentId,jdbcType=INTEGER},
+      document_id = #{record.documentId,jdbcType=VARCHAR},
+      cover_store_path = #{record.coverStorePath,jdbcType=VARCHAR},
+      recommend_desc = #{record.recommendDesc,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER},
+      create_by = #{record.createBy,jdbcType=INTEGER},
+      create_date = #{record.createDate,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.roiland.cms.persistence.gen.model.RecommendDocument" >
+    update recommend_document
+    <set >
+      <if test="documentId != null" >
+        document_id = #{documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="coverStorePath != null" >
+        cover_store_path = #{coverStorePath,jdbcType=VARCHAR},
+      </if>
+      <if test="recommendDesc != null" >
+        recommend_desc = #{recommendDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where recommend_document_id = #{recommendDocumentId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.roiland.cms.persistence.gen.model.RecommendDocument" >
+    update recommend_document
+    set document_id = #{documentId,jdbcType=VARCHAR},
+      cover_store_path = #{coverStorePath,jdbcType=VARCHAR},
+      recommend_desc = #{recommendDesc,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      create_by = #{createBy,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP}
+    where recommend_document_id = #{recommendDocumentId,jdbcType=INTEGER}
+  </update>
+</mapper>

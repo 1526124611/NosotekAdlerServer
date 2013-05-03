@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.roiland.cms.persistence.dao.CollectionDao">
+ <resultMap id="BaseResultMap" type="com.roiland.cms.dto.DocumentDto" >
+ 	<id column="document_id" property="documentId" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="about" property="about" jdbcType="VARCHAR" />
+    <result column="document_type" property="documentType" jdbcType="VARCHAR" />
+    <result column="cover_store_url" property="coverStoreUrl" jdbcType="VARCHAR" />
+    <result column="document_size" property="documentSize" jdbcType="DECIMAL" />
+    <result column="avg_score" property="avgScore" jdbcType="REAL" />
+    <result column="browse_times" property="browseTimes" jdbcType="INTEGER" />
+    <result column="comment_times" property="commentTimes" jdbcType="INTEGER" />
+    <result column="topic_id" property="topicId" jdbcType="INTEGER" />
+    <result column="row_num" property="order" jdbcType="INTEGER" />
+    <result column="document_md5" property="documentMd5" jdbcType="VARCHAR" />
+  </resultMap>
+	<select id="queryCollectionDocumentByAppUserId" resultMap="BaseResultMap" >
+		select 
+		top ${rowCount} 
+		A.document_id, A.title, A.about, A.document_type, A.cover_store_url, A.document_size, A.avg_score, A.browse_times, A.comment_times,A.document_md5
+		from 
+		document A 
+		left join relation_document B on A.document_id = B.document_id 
+		where 
+		B.app_user_id=#{appUserId} and B.status=1 and B.relation_type=3 
+		<if test="startNum >0" >
+		and A.document_id not in 
+		(
+		select 
+		top ${startNum} 
+		C.document_id 
+		from 
+		document C 
+		left join relation_document D on C.document_id = D.document_id 
+		where 
+		D.app_user_id=#{appUserId} and D.status=1 and D.relation_type=3 
+		and C.document_status=3 
+		order by D.create_date desc 
+		) 
+		</if>
+		and A.document_status=3 
+		order by B.create_date desc 
+	</select> 
+	
+<!-- 	<select id="queryBrowseDocumentByAppUserId" resultMap="BaseResultMap" >
+		select 
+		top ${rowCount} 
+		A.document_id, A.title, A.about, A.document_type, A.cover_store_url, A.document_size, A.avg_score, A.browse_times, A.comment_times,A.document_md5 
+		from 
+		document A 
+		left join relation_document B on B.document_id=A.document_id 
+		where 
+		B.app_user_id=#{appUserId} and B.status=1 and B.relation_type=4 
+		and A.document_id not in 
+		(
+		select 
+		top ${startNum} 
+		C.document_id 
+		from 
+		document C 
+		left join relation_document D on C.document_id=D.document_id 
+		where 
+		D.app_user_id=#{appUserId} and D.status=1 and D.relation_type=4 
+		and C.document_status=3 
+		group by C.document_id,C.upload_datetime
+		order by C.upload_datetime desc
+		)
+		and A.document_status=3 
+		group by A.document_id, A.title, A.about, A.document_type, A.cover_store_url, A.document_size, A.avg_score, A.browse_times, A.comment_times,A.document_md5,A.upload_datetime 
+		order by A.upload_datetime desc
+	</select>  -->
+
+	<select id="queryBrowseDocumentByAppUserId" resultMap="BaseResultMap" >
+		select top  ${rowCount} 
+		d.document_id, d.title, d.about, d.document_type, d.cover_store_url, d.document_size, d.avg_score, d.browse_times, d.comment_times,d.document_md5 
+		from document as d,
+		(
+			select MAX(create_date) as cd,document_id from relation_document
+			where app_user_id=${appUserId} and status=1 
+			group by document_id 
+		)as rd 
+		where d.document_id=rd.document_id and d.document_status=3 
+		<if test="startNum >0" >
+			and d.document_id not in
+			(
+				select top ${startNum} d.document_id
+				from document as d,
+				(
+					select MAX(create_date) as cd,document_id from relation_document
+					where app_user_id=${appUserId}  and status=1 
+					group by document_id 
+				)as rd 
+				where d.document_id=rd.document_id and d.document_status=3 
+				order by rd.cd desc
+			)
+		</if>
+		order by rd.cd desc
+	</select> 
+</mapper>

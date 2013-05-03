@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.roiland.cms.persistence.gen.mapper.FilesMapper" >
+  <resultMap id="BaseResultMap" type="com.roiland.cms.persistence.gen.model.Files" >
+    <id column="files_id" property="filesId" jdbcType="INTEGER" />
+    <result column="document_id" property="documentId" jdbcType="VARCHAR" />
+    <result column="file_name" property="fileName" jdbcType="VARCHAR" />
+    <result column="file_size" property="fileSize" jdbcType="NUMERIC" />
+    <result column="upload_app_user_id" property="uploadAppUserId" jdbcType="INTEGER" />
+    <result column="upload_datetime" property="uploadDatetime" jdbcType="TIMESTAMP" />
+    <result column="show_order" property="showOrder" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    files_id, document_id, file_name, file_size, upload_app_user_id, upload_datetime, 
+    show_order
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.roiland.cms.persistence.gen.model.FilesCriteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from files
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from files
+    where files_id = #{filesId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from files
+    where files_id = #{filesId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.roiland.cms.persistence.gen.model.FilesCriteria" >
+    delete from files
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.roiland.cms.persistence.gen.model.Files" useGeneratedKeys="true" keyProperty="filesId" >
+    insert into files (document_id, file_name, file_size, 
+      upload_app_user_id, upload_datetime, show_order
+      )
+    values (#{documentId,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, #{fileSize,jdbcType=NUMERIC}, 
+      #{uploadAppUserId,jdbcType=INTEGER}, #{uploadDatetime,jdbcType=TIMESTAMP}, #{showOrder,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.roiland.cms.persistence.gen.model.Files" useGeneratedKeys="true" keyProperty="filesId" >
+    insert into files
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="documentId != null" >
+        document_id,
+      </if>
+      <if test="fileName != null" >
+        file_name,
+      </if>
+      <if test="fileSize != null" >
+        file_size,
+      </if>
+      <if test="uploadAppUserId != null" >
+        upload_app_user_id,
+      </if>
+      <if test="uploadDatetime != null" >
+        upload_datetime,
+      </if>
+      <if test="showOrder != null" >
+        show_order,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="documentId != null" >
+        #{documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileSize != null" >
+        #{fileSize,jdbcType=NUMERIC},
+      </if>
+      <if test="uploadAppUserId != null" >
+        #{uploadAppUserId,jdbcType=INTEGER},
+      </if>
+      <if test="uploadDatetime != null" >
+        #{uploadDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="showOrder != null" >
+        #{showOrder,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.roiland.cms.persistence.gen.model.FilesCriteria" resultType="java.lang.Integer" >
+    select count(*) from files
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update files
+    <set >
+      <if test="record.filesId != null" >
+        files_id = #{record.filesId,jdbcType=INTEGER},
+      </if>
+      <if test="record.documentId != null" >
+        document_id = #{record.documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileName != null" >
+        file_name = #{record.fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileSize != null" >
+        file_size = #{record.fileSize,jdbcType=NUMERIC},
+      </if>
+      <if test="record.uploadAppUserId != null" >
+        upload_app_user_id = #{record.uploadAppUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.uploadDatetime != null" >
+        upload_datetime = #{record.uploadDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.showOrder != null" >
+        show_order = #{record.showOrder,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update files
+    set files_id = #{record.filesId,jdbcType=INTEGER},
+      document_id = #{record.documentId,jdbcType=VARCHAR},
+      file_name = #{record.fileName,jdbcType=VARCHAR},
+      file_size = #{record.fileSize,jdbcType=NUMERIC},
+      upload_app_user_id = #{record.uploadAppUserId,jdbcType=INTEGER},
+      upload_datetime = #{record.uploadDatetime,jdbcType=TIMESTAMP},
+      show_order = #{record.showOrder,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.roiland.cms.persistence.gen.model.Files" >
+    update files
+    <set >
+      <if test="documentId != null" >
+        document_id = #{documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        file_name = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileSize != null" >
+        file_size = #{fileSize,jdbcType=NUMERIC},
+      </if>
+      <if test="uploadAppUserId != null" >
+        upload_app_user_id = #{uploadAppUserId,jdbcType=INTEGER},
+      </if>
+      <if test="uploadDatetime != null" >
+        upload_datetime = #{uploadDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="showOrder != null" >
+        show_order = #{showOrder,jdbcType=INTEGER},
+      </if>
+    </set>
+    where files_id = #{filesId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.roiland.cms.persistence.gen.model.Files" >
+    update files
+    set document_id = #{documentId,jdbcType=VARCHAR},
+      file_name = #{fileName,jdbcType=VARCHAR},
+      file_size = #{fileSize,jdbcType=NUMERIC},
+      upload_app_user_id = #{uploadAppUserId,jdbcType=INTEGER},
+      upload_datetime = #{uploadDatetime,jdbcType=TIMESTAMP},
+      show_order = #{showOrder,jdbcType=INTEGER}
+    where files_id = #{filesId,jdbcType=INTEGER}
+  </update>
+</mapper>

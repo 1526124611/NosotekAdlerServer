@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.roiland.cms.persistence.dao.KnowledgeDao">
+ <resultMap id="BaseResultMap1" type="com.roiland.cms.dto.KnowledgeDto" >
+ 	<id column="knowledge_id" property="knowledgeId" jdbcType="INTEGER" />
+    <result column="knowledge_catalog" property="strKnowledgeCatalog" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="score" property="score" jdbcType="INTEGER" />
+    <result column="reply_times" property="replyTimes" jdbcType="INTEGER" />
+    <result column="realname" property="createAppuser" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="DATE" />
+  </resultMap>
+	<select id="queryKnowLedgeList" resultMap="BaseResultMap1" >
+		select 
+		top ${rowCount} 
+		a.knowledge_id,a.knowledge_catalog,a.content,a.score,a.reply_times,b.realname,a.create_date 
+		from 
+		knowledge a,app_user b 
+		where 
+		a.status=1 and a.create_appuser_id=b.app_user_id 
+		
+		<if test="knowledgeCatalog !=0" >
+		and a.knowledge_catalog=#{knowledgeCatalog} 
+		</if>
+		
+		<if test="startNum >0" >
+			and a.knowledge_id not in 
+			(
+			select 
+			top ${startNum} 
+			c.knowledge_id 
+			from 
+			knowledge c,app_user d 
+			where 
+			c.status=1 and c.create_appuser_id=d.app_user_id 
+			<if test="knowledgeCatalog !=0" >
+				and c.knowledge_catalog=#{knowledgeCatalog} 
+			</if>
+			)
+		</if>
+		
+	</select> 
+</mapper>

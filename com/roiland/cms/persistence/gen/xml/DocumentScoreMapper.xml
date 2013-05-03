@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.roiland.cms.persistence.gen.mapper.DocumentScoreMapper" >
+  <resultMap id="BaseResultMap" type="com.roiland.cms.persistence.gen.model.DocumentScore" >
+    <id column="document_score_id" property="documentScoreId" jdbcType="INTEGER" />
+    <result column="app_user_id" property="appUserId" jdbcType="INTEGER" />
+    <result column="document_id" property="documentId" jdbcType="VARCHAR" />
+    <result column="score" property="score" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    document_score_id, app_user_id, document_id, score, create_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.roiland.cms.persistence.gen.model.DocumentScoreCriteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from document_score
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from document_score
+    where document_score_id = #{documentScoreId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from document_score
+    where document_score_id = #{documentScoreId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.roiland.cms.persistence.gen.model.DocumentScoreCriteria" >
+    delete from document_score
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.roiland.cms.persistence.gen.model.DocumentScore" useGeneratedKeys="true" keyProperty="documentScoreId" >
+    insert into document_score (app_user_id, document_id, score, 
+      create_time)
+    values (#{appUserId,jdbcType=INTEGER}, #{documentId,jdbcType=VARCHAR}, #{score,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.roiland.cms.persistence.gen.model.DocumentScore" useGeneratedKeys="true" keyProperty="documentScoreId" >
+    insert into document_score
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="appUserId != null" >
+        app_user_id,
+      </if>
+      <if test="documentId != null" >
+        document_id,
+      </if>
+      <if test="score != null" >
+        score,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="appUserId != null" >
+        #{appUserId,jdbcType=INTEGER},
+      </if>
+      <if test="documentId != null" >
+        #{documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="score != null" >
+        #{score,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.roiland.cms.persistence.gen.model.DocumentScoreCriteria" resultType="java.lang.Integer" >
+    select count(*) from document_score
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update document_score
+    <set >
+      <if test="record.documentScoreId != null" >
+        document_score_id = #{record.documentScoreId,jdbcType=INTEGER},
+      </if>
+      <if test="record.appUserId != null" >
+        app_user_id = #{record.appUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.documentId != null" >
+        document_id = #{record.documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.score != null" >
+        score = #{record.score,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update document_score
+    set document_score_id = #{record.documentScoreId,jdbcType=INTEGER},
+      app_user_id = #{record.appUserId,jdbcType=INTEGER},
+      document_id = #{record.documentId,jdbcType=VARCHAR},
+      score = #{record.score,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.roiland.cms.persistence.gen.model.DocumentScore" >
+    update document_score
+    <set >
+      <if test="appUserId != null" >
+        app_user_id = #{appUserId,jdbcType=INTEGER},
+      </if>
+      <if test="documentId != null" >
+        document_id = #{documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="score != null" >
+        score = #{score,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where document_score_id = #{documentScoreId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.roiland.cms.persistence.gen.model.DocumentScore" >
+    update document_score
+    set app_user_id = #{appUserId,jdbcType=INTEGER},
+      document_id = #{documentId,jdbcType=VARCHAR},
+      score = #{score,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where document_score_id = #{documentScoreId,jdbcType=INTEGER}
+  </update>
+</mapper>

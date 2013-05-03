@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.roiland.cms.persistence.dao.AppUserDao">
+ <resultMap id="BaseResultMap" type="com.roiland.cms.dto.AppUserDto" >
+ 	 <id column="app_user_id" property="appUserId" jdbcType="INTEGER" />
+    <result column="login_name" property="loginName" jdbcType="VARCHAR" />
+    <result column="point" property="point" jdbcType="INTEGER" />
+    <result column="head_img_url" property="headImgPath" jdbcType="VARCHAR" />
+    <result column="account_status" property="accountStatus" jdbcType="INTEGER" />
+    <result column="str_account_status" property="strAccountStatus" jdbcType="VARCHAR" />
+    <result column="gender" property="gender" jdbcType="INTEGER" />
+    <result column="str_gender" property="strGender" jdbcType="VARCHAR" />
+    <result column="realname" property="realname" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+  </resultMap>
+	<select id="queryAppUserList" resultMap="BaseResultMap" >
+		select 
+		top ${rowCount}
+		A.app_user_id,A.login_name,A.point,A.head_img_url, A.account_status, A.gender,A.realname,A.mobile,A.email,A.company_name 
+		from 
+		app_user A
+		where 1=1 
+		<if test="startNum >0" >
+		and A.app_user_id not in
+		(select top ${startNum} B.app_user_id
+		from app_user B
+		)
+		</if>
+	</select> 
+  	<update id="addAppUserPoint">
+		update app_user set point=point+#{point} where app_user_id=#{appUserId}
+	</update> 
+</mapper>

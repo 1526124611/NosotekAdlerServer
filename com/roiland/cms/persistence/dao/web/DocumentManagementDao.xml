@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.roiland.cms.persistence.dao.web.DocumentManagementDao">
+ <resultMap id="BaseResultMap1" type="com.roiland.cms.dto.web.DocumentWebDto" >
+ 	<id column="document_id" property="documentId" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="document_type" property="documentType" jdbcType="VARCHAR" />
+    <result column="realname" property="uploadUserName" jdbcType="VARCHAR" />
+    <result column="upload_datetime" property="uploadDatetime" jdbcType="DATE" />
+    <result column="comment_times" property="commentTimes" jdbcType="INTEGER" />
+    
+    <result column="document_catalog" property="documentCatalog" jdbcType="INTEGER" />
+    <result column="document_origin" property="documentOrigin" jdbcType="INTEGER" />
+    <result column="topic_id" property="topicId" jdbcType="INTEGER" />
+  </resultMap>
+  
+  	<select id="searchDocuments" resultMap="BaseResultMap1" >
+		select 
+		top ${rowCount} 
+		A.document_id, A.title,A.document_type, B.realname,A.upload_datetime,A.comment_times,A.document_catalog,A.document_origin,A.topic_id  
+		from 
+		document A 
+		left join app_user B on A.upload_app_user_id=B.app_user_id 
+		where 
+		A.document_status=3 
+		<if test="uploadUserName != null and uploadUserName != ''">
+		and B.realname like #{uploadUserName}
+		</if>
+		<if test="documentType != null and documentType != ''">
+		and A.document_type = #{documentType} 
+		</if>
+		<if test="uploadDatetime != null and uploadDatetime != ''">
+		and CONVERT(varchar(100), A.upload_datetime, 101) = #{uploadDatetime} 
+		</if>
+		<if test="startNum >0" >
+		and A.document_id not in 
+		(
+		select 
+		top ${startNum} 
+		AA.document_id 
+		from 
+		document AA 
+		left join app_user BB on AA.upload_app_user_id=BB.app_user_id 
+		where 
+		AA.document_status=3 
+		<if test="uploadUserName != null and uploadUserName != ''">
+		and BB.realname like #{uploadUserName}
+		</if>
+		<if test="documentType != null and documentType != ''">
+		and AA.document_type = #{documentType} 
+		</if>
+		<if test="uploadDatetime != null and uploadDatetime != ''">
+		and CONVERT(varchar(100), AA.upload_datetime, 101) = #{uploadDatetime} 
+		</if>
+		order by AA.upload_datetime desc
+		)
+		</if>
+		order by A.upload_datetime desc
+	</select> 
+	<select id="getRecordCount" resultType="Integer" >
+		select count(A.document_id) 
+		from document A 
+		left join app_user B on A.upload_app_user_id=B.app_user_id 
+		where A.document_status=3 
+		<if test="uploadUserName != null and uploadUserName != ''">
+		and B.realname like #{uploadUserName} 
+		</if>
+		<if test="documentType != null and documentType != ''">
+		and A.document_type = #{documentType} 
+		</if>
+		<if test="uploadDatetime != null and uploadDatetime != ''">
+		and CONVERT(varchar(100), A.upload_datetime, 101) = #{uploadDatetime} 
+		</if>
+	</select>
+	<select id="selDocumentType" resultMap="BaseResultMap1">
+		select distinct lower(document_type) as document_type 
+		from document
+		where document_status=3
+	</select>
+	
+</mapper>

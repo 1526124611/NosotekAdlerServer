@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.roiland.cms.persistence.dao.DocumentDao">
+ <resultMap id="BaseResultMap1" type="com.roiland.cms.dto.DocumentDto" >
+ 	<id column="document_id" property="documentId" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="about" property="about" jdbcType="VARCHAR" />
+    <result column="document_type" property="documentType" jdbcType="VARCHAR" />
+    <result column="cover_store_url" property="coverStoreUrl" jdbcType="VARCHAR" />
+    <result column="document_size" property="documentSize" jdbcType="DECIMAL" />
+    <result column="avg_score" property="avgScore" jdbcType="REAL" />
+    <result column="browse_times" property="browseTimes" jdbcType="INTEGER" />
+    <result column="comment_times" property="commentTimes" jdbcType="INTEGER" />
+    <result column="document_md5" property="documentMd5" jdbcType="VARCHAR" />
+    <result column="realname" property="uploadUserName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="BaseResultMap2" type="com.roiland.cms.dto.RecommendDocumentDto" >
+    <result column="cover_store_path" property="coverStoreUrl" jdbcType="VARCHAR" />
+ 	<result column="document_id" property="documentId" jdbcType="VARCHAR" />
+ 	<result column="title" property="title" jdbcType="VARCHAR" />
+ 	<result column="document_type" property="documentType" jdbcType="VARCHAR" />
+  </resultMap>
+	<select id="queryDocumentListByRecommend" resultMap="BaseResultMap1" >
+		select 
+		top ${rowCount} 
+		A.document_id, A.title,A. about, A.document_type, A.cover_store_url,A. document_size, A.avg_score,A. browse_times, A.comment_times,A.document_md5
+		from 
+		document A 
+		where A.document_status=3 
+		<if test="startNum >0" >
+		and A.document_id not in 
+		(
+		select 
+		top ${startNum} 
+		B.document_id 
+		from 
+		document B 
+		where B.document_status=3 
+		order by B.avg_score desc 
+		)
+		</if>
+		order by A.avg_score desc 
+	</select> 
+	<select id="getTopicDocumentList" resultMap="BaseResultMap1" >
+		select 
+		top ${rowCount} 
+		A.cover_store_url,A.document_id,A.title,A.about,A.document_type,A.document_size,A.avg_score,A.comment_times,A.browse_times,A.document_md5 
+		from 
+		document A 
+		where A.document_status=3 and A.topic_id=#{topicId} 
+		<if test="startNum >0" >
+		and A.document_id not in 
+		(
+		select 
+		top ${startNum} 
+		B.document_id 
+		from 
+		document B 
+		where B.document_status=3 and B.topic_id=#{topicId} 
+		order by B.upload_datetime desc 
+		)
+		</if>
+		order by A.upload_datetime desc
+	</select> 
+	<select id="orderByBrowseTimes" resultMap="BaseResultMap1" >
+		select 
+		top ${rowCount} 
+		A.document_id, A.title, A.about, A.document_type, A.cover_store_url,A. document_size, A.avg_score, A.browse_times, A.comment_times,A.document_md5  
+		from 
+		document A 
+		where 1=1 
+		<if test="startNum >0" >
+		and A.document_id not in
+		(select top ${startNum}
+		AA.document_id
+		from document AA 
+		where 
+		AA.document_status=3 
+		order by AA.browse_times desc ,AA.upload_datetime desc) 
+		</if>
+		and A.document_status=3 
+		order by A.browse_times desc ,A.upload_datetime desc
+	</select>
+	<select id="queryDocumentDtosByCommentTimes" resultMap="BaseResultMap1" >
+		select 
+		top ${rowCount} 
+		A.document_id, A.title, A.about, A.document_type, A.cover_store_url,A. document_size, A.avg_score, A.browse_times, A.comment_times,A.document_md5  
+		from 
+		document A 
+		where 1=1
+		<if test="startNum >0" >
+		and A.document_id not in
+		(select top ${startNum}
+		AA.document_id
+		from document AA 
+		where 
+		AA.document_status=3 
+		order by AA.comment_times desc ,AA.upload_datetime desc) 
+		</if>
+		and A.document_status=3 
+		order by A.comment_times desc ,A.upload_datetime desc
+	</select>
+	<select id="orderByInOneWeekBrowseTimes" resultMap="BaseResultMap1" >
+		<![CDATA[
+			select 
+			top ${rowCount} 
+			A.document_id, A.title, A.about, A.document_type, A.cover_store_url,A.document_size, A.avg_score, A.browse_times, A.comment_times,A.document_md5
+			from 
+			document A 
+			left join 
+			(
+			select 
+			count(C.document_id) as browseCount,C.document_id 
+			from 
+			relation_document C 
+			where 
+			C.relation_type=4 and C.create_date>=DATEADD(DD,-7,GETDATE()) 
+			group by 
+			c.document_id 
+			) B 
+			on A.document_id=B.document_id 
+			where 
+			A.document_status = 3 
+			and A.document_id not in 
+			(
+			select 
+			top ${startNum} 
+			AA.document_id 
+			from 
+			document AA 
+			left join 
+			(
+			select 
+			count(CC.document_id) as browseCount,CC.document_id 
+			from 
+			relation_document CC 
+			where 
+			CC.relation_type=4 and CC.create_date>=DATEADD(DD,-7,GETDATE()) 
+			group by 
+			CC.document_id 
+			) BB 
+			on AA.document_id=BB.document_id 
+			where 
+			AA.document_status = 3 
+			order by BB.browseCount desc,AA.document_id 
+			) 
+			order by B.browseCount desc,A.document_id 
+		]]>
+	</select>
+	<select id="getDocumentList" resultMap="BaseResultMap1" >
+		select top ${rowCount}  a.cover_store_url,a.document_id,a.title,about,a.document_type,
+		a.document_size,a.avg_score,a.browse_times,a.comment_times,a.topic_id,a.document_md5
+		from  document a 
+		where  a.document_status=3 
+		<if test="catalogKey !=0" >
+			and a.document_catalog = ${catalogKey}
+		</if>
+		<if test="documentOrigin !=0" >
+			and a.document_origin = ${documentOrigin}
+		</if>
+		<if test="startNum >0" >
+			and a.document_id not in(
+				select top ${startNum} document_id from document d
+				where  d.document_status=3 
+				<if test="catalogKey !=0" >
+					and d.document_catalog = ${catalogKey}
+				</if>
+				<if test="documentOrigin !=0" >
+					and d.document_origin = ${documentOrigin}
+				</if>
+				order by d.upload_datetime desc
+			)
+		</if>
+		order by a.upload_datetime desc
+	</select>
+
+	<select id="searchDocuments" resultMap="BaseResultMap1" >
+		select 
+		top ${rowCount} 
+		A.document_id, A.title,A. about, A.document_type, A.cover_store_url,A. document_size, A.avg_score,A. browse_times, A.comment_times, A.document_md5, B.realname 
+		from 
+		document A 
+		left join app_user B on A.upload_app_user_id=B.app_user_id 
+		where A.document_status=3 
+		<if test="searchString != null">
+		 	<if test="searchType == 1">
+				and B.realname like #{searchString}
+			</if>
+			<if test="searchType == 2">
+				and (A.about like #{searchString} or A.title like #{searchString})
+			</if> 
+		</if>
+		<if test="startNum >0" >
+		and A.document_id not in 
+		(
+		select 
+		top ${startNum} 
+		C.document_id 
+		from 
+		document C 
+		left join app_user D on C.upload_app_user_id=D.app_user_id 
+		where C.document_status=3 
+		<if test="searchString != null">
+		 	<if test="searchType == 1">
+				and D.realname like #{searchString}
+			</if>
+			<if test="searchType == 2">
+				and (C.about like #{searchString} or C.title like #{searchString})
+			</if> 
+		</if>
+		order by C.upload_datetime desc
+		)
+		</if>
+		order by A.upload_datetime desc
+	</select> 
+	
+	<select id="queryRecommentDocumentList" resultMap="BaseResultMap2" >
+		select 
+		a.title, a.document_type, b.cover_store_path ,b.document_id 
+		from 
+		document a 
+		left join recommend_document b on a.document_id=b.document_id 
+		where 
+		a.document_status=3 
+		and b.status=0 
+		order by b.create_date desc
+	</select>
+	
+	<select id="searchDocumentsCount" resultType="Integer" >
+		select count(A.document_id)
+		from 
+		document A 
+		left join app_user B on A.upload_app_user_id=B.app_user_id 
+		where A.document_status=3 
+		<if test="searchString != null">
+		 	<if test="searchType == 1">
+				and B.realname like #{searchString}
+			</if>
+			<if test="searchType == 2">
+				and A.about like #{searchString} or A.title like #{searchString}
+			</if> 
+		</if>
+	</select>
+</mapper>

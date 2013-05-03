@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.roiland.cms.persistence.dao.RelationDocumentDao">
+ <resultMap id="BaseResultMap1" type="com.roiland.cms.dto.DocumentDto" >
+ 	<id column="document_id" property="documentId" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="about" property="about" jdbcType="VARCHAR" />
+    <result column="document_type" property="documentType" jdbcType="VARCHAR" />
+    <result column="cover_store_url" property="coverStoreUrl" jdbcType="VARCHAR" />
+    <result column="document_size" property="documentSize" jdbcType="DECIMAL" />
+    <result column="avg_score" property="avgScore" jdbcType="REAL" />
+    <result column="browse_times" property="browseTimes" jdbcType="INTEGER" />
+    <result column="comment_times" property="commentTimes" jdbcType="INTEGER" />
+    <result column="document_md5" property="documentMd5" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="getUploadByAppUserId" resultMap="BaseResultMap1" >
+		select 
+		top ${rowCount}
+		A.document_id, A.title, A.about, A.document_type, A.cover_store_url, A.document_size, A.avg_score, A.browse_times, A.comment_times,A.document_md5 
+		from 
+		document A
+		left join relation_document B on B.document_id = A.document_id 
+		where 1=1 
+		<if test="startNum >0" >
+		and A.document_id not in
+		(select top ${startNum} AA.document_id
+		from 
+		document AA
+		left join relation_document BB on BB.document_id = AA.document_id 
+		where 
+		BB.relation_type=1 
+		and BB.app_user_id = #{appUserId}
+		and AA.document_status = 3
+		order by AA.upload_datetime desc) 
+		</if>
+		and B.relation_type=1
+		and B.app_user_id = #{appUserId}
+		and A.document_status=3 
+		order by A.upload_datetime desc
+	</select>
+	</mapper>

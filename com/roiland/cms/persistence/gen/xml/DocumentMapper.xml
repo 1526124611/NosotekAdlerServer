@@ -1,0 +1,576 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.roiland.cms.persistence.gen.mapper.DocumentMapper" >
+  <resultMap id="BaseResultMap" type="com.roiland.cms.persistence.gen.model.Document" >
+    <id column="document_id" property="documentId" jdbcType="VARCHAR" />
+    <result column="document_name" property="documentName" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="about" property="about" jdbcType="VARCHAR" />
+    <result column="keyword" property="keyword" jdbcType="VARCHAR" />
+    <result column="document_type" property="documentType" jdbcType="VARCHAR" />
+    <result column="document_catalog" property="documentCatalog" jdbcType="INTEGER" />
+    <result column="document_origin" property="documentOrigin" jdbcType="INTEGER" />
+    <result column="topic_id" property="topicId" jdbcType="INTEGER" />
+    <result column="store_path" property="storePath" jdbcType="VARCHAR" />
+    <result column="cover_store_url" property="coverStoreUrl" jdbcType="VARCHAR" />
+    <result column="document_size" property="documentSize" jdbcType="NUMERIC" />
+    <result column="document_md5" property="documentMd5" jdbcType="VARCHAR" />
+    <result column="pages" property="pages" jdbcType="INTEGER" />
+    <result column="avg_score" property="avgScore" jdbcType="REAL" />
+    <result column="browse_times" property="browseTimes" jdbcType="INTEGER" />
+    <result column="download_times" property="downloadTimes" jdbcType="INTEGER" />
+    <result column="collection_times" property="collectionTimes" jdbcType="INTEGER" />
+    <result column="comment_times" property="commentTimes" jdbcType="INTEGER" />
+    <result column="recommend_times" property="recommendTimes" jdbcType="INTEGER" />
+    <result column="not_recommend_times" property="notRecommendTimes" jdbcType="INTEGER" />
+    <result column="view_level" property="viewLevel" jdbcType="INTEGER" />
+    <result column="view_cost" property="viewCost" jdbcType="INTEGER" />
+    <result column="document_status" property="documentStatus" jdbcType="INTEGER" />
+    <result column="upload_app_user_id" property="uploadAppUserId" jdbcType="INTEGER" />
+    <result column="upload_datetime" property="uploadDatetime" jdbcType="TIMESTAMP" />
+    <result column="update_app_user_id" property="updateAppUserId" jdbcType="INTEGER" />
+    <result column="update_datetime" property="updateDatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    document_id, document_name, title, about, keyword, document_type, document_catalog, 
+    document_origin, topic_id, store_path, cover_store_url, document_size, document_md5, 
+    pages, avg_score, browse_times, download_times, collection_times, comment_times, 
+    recommend_times, not_recommend_times, view_level, view_cost, document_status, upload_app_user_id, 
+    upload_datetime, update_app_user_id, update_datetime
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.roiland.cms.persistence.gen.model.DocumentCriteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from document
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from document
+    where document_id = #{documentId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from document
+    where document_id = #{documentId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.roiland.cms.persistence.gen.model.DocumentCriteria" >
+    delete from document
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.roiland.cms.persistence.gen.model.Document" >
+    insert into document (document_id, document_name, title, 
+      about, keyword, document_type, 
+      document_catalog, document_origin, topic_id, 
+      store_path, cover_store_url, document_size, 
+      document_md5, pages, avg_score, 
+      browse_times, download_times, collection_times, 
+      comment_times, recommend_times, not_recommend_times, 
+      view_level, view_cost, document_status, 
+      upload_app_user_id, upload_datetime, update_app_user_id, 
+      update_datetime)
+    values (#{documentId,jdbcType=VARCHAR}, #{documentName,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{about,jdbcType=VARCHAR}, #{keyword,jdbcType=VARCHAR}, #{documentType,jdbcType=VARCHAR}, 
+      #{documentCatalog,jdbcType=INTEGER}, #{documentOrigin,jdbcType=INTEGER}, #{topicId,jdbcType=INTEGER}, 
+      #{storePath,jdbcType=VARCHAR}, #{coverStoreUrl,jdbcType=VARCHAR}, #{documentSize,jdbcType=NUMERIC}, 
+      #{documentMd5,jdbcType=VARCHAR}, #{pages,jdbcType=INTEGER}, #{avgScore,jdbcType=REAL}, 
+      #{browseTimes,jdbcType=INTEGER}, #{downloadTimes,jdbcType=INTEGER}, #{collectionTimes,jdbcType=INTEGER}, 
+      #{commentTimes,jdbcType=INTEGER}, #{recommendTimes,jdbcType=INTEGER}, #{notRecommendTimes,jdbcType=INTEGER}, 
+      #{viewLevel,jdbcType=INTEGER}, #{viewCost,jdbcType=INTEGER}, #{documentStatus,jdbcType=INTEGER}, 
+      #{uploadAppUserId,jdbcType=INTEGER}, #{uploadDatetime,jdbcType=TIMESTAMP}, #{updateAppUserId,jdbcType=INTEGER}, 
+      #{updateDatetime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.roiland.cms.persistence.gen.model.Document" >
+    insert into document
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="documentId != null" >
+        document_id,
+      </if>
+      <if test="documentName != null" >
+        document_name,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="about != null" >
+        about,
+      </if>
+      <if test="keyword != null" >
+        keyword,
+      </if>
+      <if test="documentType != null" >
+        document_type,
+      </if>
+      <if test="documentCatalog != null" >
+        document_catalog,
+      </if>
+      <if test="documentOrigin != null" >
+        document_origin,
+      </if>
+      <if test="topicId != null" >
+        topic_id,
+      </if>
+      <if test="storePath != null" >
+        store_path,
+      </if>
+      <if test="coverStoreUrl != null" >
+        cover_store_url,
+      </if>
+      <if test="documentSize != null" >
+        document_size,
+      </if>
+      <if test="documentMd5 != null" >
+        document_md5,
+      </if>
+      <if test="pages != null" >
+        pages,
+      </if>
+      <if test="avgScore != null" >
+        avg_score,
+      </if>
+      <if test="browseTimes != null" >
+        browse_times,
+      </if>
+      <if test="downloadTimes != null" >
+        download_times,
+      </if>
+      <if test="collectionTimes != null" >
+        collection_times,
+      </if>
+      <if test="commentTimes != null" >
+        comment_times,
+      </if>
+      <if test="recommendTimes != null" >
+        recommend_times,
+      </if>
+      <if test="notRecommendTimes != null" >
+        not_recommend_times,
+      </if>
+      <if test="viewLevel != null" >
+        view_level,
+      </if>
+      <if test="viewCost != null" >
+        view_cost,
+      </if>
+      <if test="documentStatus != null" >
+        document_status,
+      </if>
+      <if test="uploadAppUserId != null" >
+        upload_app_user_id,
+      </if>
+      <if test="uploadDatetime != null" >
+        upload_datetime,
+      </if>
+      <if test="updateAppUserId != null" >
+        update_app_user_id,
+      </if>
+      <if test="updateDatetime != null" >
+        update_datetime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="documentId != null" >
+        #{documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="documentName != null" >
+        #{documentName,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="about != null" >
+        #{about,jdbcType=VARCHAR},
+      </if>
+      <if test="keyword != null" >
+        #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="documentType != null" >
+        #{documentType,jdbcType=VARCHAR},
+      </if>
+      <if test="documentCatalog != null" >
+        #{documentCatalog,jdbcType=INTEGER},
+      </if>
+      <if test="documentOrigin != null" >
+        #{documentOrigin,jdbcType=INTEGER},
+      </if>
+      <if test="topicId != null" >
+        #{topicId,jdbcType=INTEGER},
+      </if>
+      <if test="storePath != null" >
+        #{storePath,jdbcType=VARCHAR},
+      </if>
+      <if test="coverStoreUrl != null" >
+        #{coverStoreUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="documentSize != null" >
+        #{documentSize,jdbcType=NUMERIC},
+      </if>
+      <if test="documentMd5 != null" >
+        #{documentMd5,jdbcType=VARCHAR},
+      </if>
+      <if test="pages != null" >
+        #{pages,jdbcType=INTEGER},
+      </if>
+      <if test="avgScore != null" >
+        #{avgScore,jdbcType=REAL},
+      </if>
+      <if test="browseTimes != null" >
+        #{browseTimes,jdbcType=INTEGER},
+      </if>
+      <if test="downloadTimes != null" >
+        #{downloadTimes,jdbcType=INTEGER},
+      </if>
+      <if test="collectionTimes != null" >
+        #{collectionTimes,jdbcType=INTEGER},
+      </if>
+      <if test="commentTimes != null" >
+        #{commentTimes,jdbcType=INTEGER},
+      </if>
+      <if test="recommendTimes != null" >
+        #{recommendTimes,jdbcType=INTEGER},
+      </if>
+      <if test="notRecommendTimes != null" >
+        #{notRecommendTimes,jdbcType=INTEGER},
+      </if>
+      <if test="viewLevel != null" >
+        #{viewLevel,jdbcType=INTEGER},
+      </if>
+      <if test="viewCost != null" >
+        #{viewCost,jdbcType=INTEGER},
+      </if>
+      <if test="documentStatus != null" >
+        #{documentStatus,jdbcType=INTEGER},
+      </if>
+      <if test="uploadAppUserId != null" >
+        #{uploadAppUserId,jdbcType=INTEGER},
+      </if>
+      <if test="uploadDatetime != null" >
+        #{uploadDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAppUserId != null" >
+        #{updateAppUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateDatetime != null" >
+        #{updateDatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.roiland.cms.persistence.gen.model.DocumentCriteria" resultType="java.lang.Integer" >
+    select count(*) from document
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update document
+    <set >
+      <if test="record.documentId != null" >
+        document_id = #{record.documentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.documentName != null" >
+        document_name = #{record.documentName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.title != null" >
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.about != null" >
+        about = #{record.about,jdbcType=VARCHAR},
+      </if>
+      <if test="record.keyword != null" >
+        keyword = #{record.keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="record.documentType != null" >
+        document_type = #{record.documentType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.documentCatalog != null" >
+        document_catalog = #{record.documentCatalog,jdbcType=INTEGER},
+      </if>
+      <if test="record.documentOrigin != null" >
+        document_origin = #{record.documentOrigin,jdbcType=INTEGER},
+      </if>
+      <if test="record.topicId != null" >
+        topic_id = #{record.topicId,jdbcType=INTEGER},
+      </if>
+      <if test="record.storePath != null" >
+        store_path = #{record.storePath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.coverStoreUrl != null" >
+        cover_store_url = #{record.coverStoreUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.documentSize != null" >
+        document_size = #{record.documentSize,jdbcType=NUMERIC},
+      </if>
+      <if test="record.documentMd5 != null" >
+        document_md5 = #{record.documentMd5,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pages != null" >
+        pages = #{record.pages,jdbcType=INTEGER},
+      </if>
+      <if test="record.avgScore != null" >
+        avg_score = #{record.avgScore,jdbcType=REAL},
+      </if>
+      <if test="record.browseTimes != null" >
+        browse_times = #{record.browseTimes,jdbcType=INTEGER},
+      </if>
+      <if test="record.downloadTimes != null" >
+        download_times = #{record.downloadTimes,jdbcType=INTEGER},
+      </if>
+      <if test="record.collectionTimes != null" >
+        collection_times = #{record.collectionTimes,jdbcType=INTEGER},
+      </if>
+      <if test="record.commentTimes != null" >
+        comment_times = #{record.commentTimes,jdbcType=INTEGER},
+      </if>
+      <if test="record.recommendTimes != null" >
+        recommend_times = #{record.recommendTimes,jdbcType=INTEGER},
+      </if>
+      <if test="record.notRecommendTimes != null" >
+        not_recommend_times = #{record.notRecommendTimes,jdbcType=INTEGER},
+      </if>
+      <if test="record.viewLevel != null" >
+        view_level = #{record.viewLevel,jdbcType=INTEGER},
+      </if>
+      <if test="record.viewCost != null" >
+        view_cost = #{record.viewCost,jdbcType=INTEGER},
+      </if>
+      <if test="record.documentStatus != null" >
+        document_status = #{record.documentStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.uploadAppUserId != null" >
+        upload_app_user_id = #{record.uploadAppUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.uploadDatetime != null" >
+        upload_datetime = #{record.uploadDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateAppUserId != null" >
+        update_app_user_id = #{record.updateAppUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateDatetime != null" >
+        update_datetime = #{record.updateDatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update document
+    set document_id = #{record.documentId,jdbcType=VARCHAR},
+      document_name = #{record.documentName,jdbcType=VARCHAR},
+      title = #{record.title,jdbcType=VARCHAR},
+      about = #{record.about,jdbcType=VARCHAR},
+      keyword = #{record.keyword,jdbcType=VARCHAR},
+      document_type = #{record.documentType,jdbcType=VARCHAR},
+      document_catalog = #{record.documentCatalog,jdbcType=INTEGER},
+      document_origin = #{record.documentOrigin,jdbcType=INTEGER},
+      topic_id = #{record.topicId,jdbcType=INTEGER},
+      store_path = #{record.storePath,jdbcType=VARCHAR},
+      cover_store_url = #{record.coverStoreUrl,jdbcType=VARCHAR},
+      document_size = #{record.documentSize,jdbcType=NUMERIC},
+      document_md5 = #{record.documentMd5,jdbcType=VARCHAR},
+      pages = #{record.pages,jdbcType=INTEGER},
+      avg_score = #{record.avgScore,jdbcType=REAL},
+      browse_times = #{record.browseTimes,jdbcType=INTEGER},
+      download_times = #{record.downloadTimes,jdbcType=INTEGER},
+      collection_times = #{record.collectionTimes,jdbcType=INTEGER},
+      comment_times = #{record.commentTimes,jdbcType=INTEGER},
+      recommend_times = #{record.recommendTimes,jdbcType=INTEGER},
+      not_recommend_times = #{record.notRecommendTimes,jdbcType=INTEGER},
+      view_level = #{record.viewLevel,jdbcType=INTEGER},
+      view_cost = #{record.viewCost,jdbcType=INTEGER},
+      document_status = #{record.documentStatus,jdbcType=INTEGER},
+      upload_app_user_id = #{record.uploadAppUserId,jdbcType=INTEGER},
+      upload_datetime = #{record.uploadDatetime,jdbcType=TIMESTAMP},
+      update_app_user_id = #{record.updateAppUserId,jdbcType=INTEGER},
+      update_datetime = #{record.updateDatetime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.roiland.cms.persistence.gen.model.Document" >
+    update document
+    <set >
+      <if test="documentName != null" >
+        document_name = #{documentName,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="about != null" >
+        about = #{about,jdbcType=VARCHAR},
+      </if>
+      <if test="keyword != null" >
+        keyword = #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="documentType != null" >
+        document_type = #{documentType,jdbcType=VARCHAR},
+      </if>
+      <if test="documentCatalog != null" >
+        document_catalog = #{documentCatalog,jdbcType=INTEGER},
+      </if>
+      <if test="documentOrigin != null" >
+        document_origin = #{documentOrigin,jdbcType=INTEGER},
+      </if>
+      <if test="topicId != null" >
+        topic_id = #{topicId,jdbcType=INTEGER},
+      </if>
+      <if test="storePath != null" >
+        store_path = #{storePath,jdbcType=VARCHAR},
+      </if>
+      <if test="coverStoreUrl != null" >
+        cover_store_url = #{coverStoreUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="documentSize != null" >
+        document_size = #{documentSize,jdbcType=NUMERIC},
+      </if>
+      <if test="documentMd5 != null" >
+        document_md5 = #{documentMd5,jdbcType=VARCHAR},
+      </if>
+      <if test="pages != null" >
+        pages = #{pages,jdbcType=INTEGER},
+      </if>
+      <if test="avgScore != null" >
+        avg_score = #{avgScore,jdbcType=REAL},
+      </if>
+      <if test="browseTimes != null" >
+        browse_times = #{browseTimes,jdbcType=INTEGER},
+      </if>
+      <if test="downloadTimes != null" >
+        download_times = #{downloadTimes,jdbcType=INTEGER},
+      </if>
+      <if test="collectionTimes != null" >
+        collection_times = #{collectionTimes,jdbcType=INTEGER},
+      </if>
+      <if test="commentTimes != null" >
+        comment_times = #{commentTimes,jdbcType=INTEGER},
+      </if>
+      <if test="recommendTimes != null" >
+        recommend_times = #{recommendTimes,jdbcType=INTEGER},
+      </if>
+      <if test="notRecommendTimes != null" >
+        not_recommend_times = #{notRecommendTimes,jdbcType=INTEGER},
+      </if>
+      <if test="viewLevel != null" >
+        view_level = #{viewLevel,jdbcType=INTEGER},
+      </if>
+      <if test="viewCost != null" >
+        view_cost = #{viewCost,jdbcType=INTEGER},
+      </if>
+      <if test="documentStatus != null" >
+        document_status = #{documentStatus,jdbcType=INTEGER},
+      </if>
+      <if test="uploadAppUserId != null" >
+        upload_app_user_id = #{uploadAppUserId,jdbcType=INTEGER},
+      </if>
+      <if test="uploadDatetime != null" >
+        upload_datetime = #{uploadDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAppUserId != null" >
+        update_app_user_id = #{updateAppUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateDatetime != null" >
+        update_datetime = #{updateDatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where document_id = #{documentId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.roiland.cms.persistence.gen.model.Document" >
+    update document
+    set document_name = #{documentName,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      about = #{about,jdbcType=VARCHAR},
+      keyword = #{keyword,jdbcType=VARCHAR},
+      document_type = #{documentType,jdbcType=VARCHAR},
+      document_catalog = #{documentCatalog,jdbcType=INTEGER},
+      document_origin = #{documentOrigin,jdbcType=INTEGER},
+      topic_id = #{topicId,jdbcType=INTEGER},
+      store_path = #{storePath,jdbcType=VARCHAR},
+      cover_store_url = #{coverStoreUrl,jdbcType=VARCHAR},
+      document_size = #{documentSize,jdbcType=NUMERIC},
+      document_md5 = #{documentMd5,jdbcType=VARCHAR},
+      pages = #{pages,jdbcType=INTEGER},
+      avg_score = #{avgScore,jdbcType=REAL},
+      browse_times = #{browseTimes,jdbcType=INTEGER},
+      download_times = #{downloadTimes,jdbcType=INTEGER},
+      collection_times = #{collectionTimes,jdbcType=INTEGER},
+      comment_times = #{commentTimes,jdbcType=INTEGER},
+      recommend_times = #{recommendTimes,jdbcType=INTEGER},
+      not_recommend_times = #{notRecommendTimes,jdbcType=INTEGER},
+      view_level = #{viewLevel,jdbcType=INTEGER},
+      view_cost = #{viewCost,jdbcType=INTEGER},
+      document_status = #{documentStatus,jdbcType=INTEGER},
+      upload_app_user_id = #{uploadAppUserId,jdbcType=INTEGER},
+      upload_datetime = #{uploadDatetime,jdbcType=TIMESTAMP},
+      update_app_user_id = #{updateAppUserId,jdbcType=INTEGER},
+      update_datetime = #{updateDatetime,jdbcType=TIMESTAMP}
+    where document_id = #{documentId,jdbcType=VARCHAR}
+  </update>
+</mapper>

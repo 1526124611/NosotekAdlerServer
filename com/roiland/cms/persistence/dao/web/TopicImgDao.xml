@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.roiland.cms.persistence.dao.web.TopicImgDao">
+	<resultMap id="BaseResultMap" type="com.roiland.cms.dto.web.TopicWebDto">
+		<id column="topic_id" property="topicId" jdbcType="INTEGER" />
+		<result column="topic_img_path" property="topicImgPath" jdbcType="VARCHAR" />
+		<result column="topic_name" property="topicName" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="topicImgList" resultType="com.roiland.cms.dto.web.TopicWebDto">
+		select 
+		top ${rowCount} 
+		a.topic_id as topicId,a.topic_img_path as topicImgPath,a.topic_name as topicName 
+		from 
+		topic a 
+		where a.topic_status=1 
+		<if test="startNum >0" >
+		and a.topic_id not in 
+		(
+		select 
+		top ${startNum} 
+		aa.topic_id 
+		from 
+		topic aa 
+		where aa.topic_status=1 
+		order by aa.create_date desc 
+		)
+		</if>
+		order by a.create_date desc 
+	</select>
+	<select id="getRecordCount" resultType="Integer" >
+		select 
+		count(topic_id)
+		from
+		topic 
+		where
+		topic_status=1
+	</select>
+</mapper>

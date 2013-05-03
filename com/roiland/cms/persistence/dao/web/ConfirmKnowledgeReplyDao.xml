@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.roiland.cms.persistence.dao.web.ConfirmKnowledgeReplyDao">
+	<resultMap id="BaseResultMap" type="com.roiland.cms.dto.web.KnowledgeReplyWebDto">
+		<id column="knowledge_reply_id" property="knowledgeReplyId" jdbcType="INTEGER" />
+		<result column="status" property="knowledgeReplyStatus" jdbcType="INTEGER" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="content" property="knowledgeContent" jdbcType="VARCHAR" />
+		<result column="realname" property="replyAppuser" jdbcType="VARCHAR" />
+		<result column="reply_date" property="replyDate" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<select id="confirmKnowledgeReplyList" resultType="com.roiland.cms.dto.web.KnowledgeReplyWebDto">
+		select
+		top ${rowCount}
+		b.knowledge_reply_id as knowledgeReplyId,
+		b.status as knowledgeReplyStatus,
+		b.content as content,
+		a.content as knowledgeContent,
+		c.realname as replyAppuser,
+		b.reply_date as replyDate 
+		from
+		knowledge a
+		inner join knowledge_reply b on a.knowledge_id=b.knowledge_id
+		left join app_user c on b.reply_appuser_id=c.app_user_id
+		where
+		b.status=2 and a.status=1 
+		<if test="startNum >0" >
+		and b.knowledge_reply_id not in
+		(
+		select
+		top ${startNum}
+		bb.knowledge_reply_id
+		from
+		knowledge aa
+		inner join knowledge_reply bb on aa.knowledge_id=bb.knowledge_id
+		left join app_user cc on bb.reply_appuser_id=cc.app_user_id
+		where
+		bb.status=2 and aa.status=1 
+		order by bb.reply_date desc
+		)
+		</if>
+		order by b.reply_date desc
+	</select>
+	<select id="getRecordCount" resultType="Integer" >
+		select count(b.knowledge_reply_id) 
+		from 
+		knowledge a
+		inner join knowledge_reply b on a.knowledge_id=b.knowledge_id
+		left join app_user c on b.reply_appuser_id=c.app_user_id 
+		where 
+		b.status=2 and a.status=1 
+	</select>
+</mapper>

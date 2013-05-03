@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.roiland.cms.persistence.dao.web.UserManagementDao">
+  
+  	<select id="searchUsers" resultType="com.roiland.cms.dto.web.AppUserWebDto" >
+		select 
+			top ${rowCount} 
+			A.app_user_id as appUserId, A.account_status as accountStatus,A.head_img_url as headImgPath, A.realname as realname, A.login_name as loginName ,A.point as point,A.create_date as createDate
+		from 
+			app_user A 
+		where 
+			1=1
+		<if test="realName != null and realName !=''">
+		and A.realname like #{realName} 
+		</if>
+		<if test="startNum >0" >
+		and A.app_user_id not in
+		(
+		select 
+			top ${startNum} 
+			AA.app_user_id 
+		from 
+			app_user AA 
+		where 
+			1=1
+			<if test="realName != null and realName !=''">
+			and AA.realname like #{realName} 
+			</if>
+		)
+		</if>
+	</select> 
+	
+	<select id="calDocScore" resultType="Float" >
+		select 
+			SUM(d.avg_score)/COUNT(d.document_id) as docScore
+		from 
+			document d
+		where 
+			d.upload_app_user_id=#{appUserId}
+		group by 
+			d.upload_app_user_id
+	</select> 
+
+	
+	
+	<select id="querUserRelationDocument" resultType="com.roiland.cms.dto.web.AppUserWebDto" >
+		select 
+			COUNT(a.document_id) as documentIdNum,SUM(a.download_times) as downloadTimesSum,SUM(a.collection_times) as collectionTimesSum,SUM(a.avg_score)/COUNT(a.document_id) as avgScoreSum
+		from 
+			document a 
+		where
+			 a.upload_app_user_id=${id} and a.document_status=3
+	</select> 
+	
+	
+	
+	<select id="querUserDocument" resultType="com.roiland.cms.dto.web.DocumentWebDto" >
+		select 
+		top ${rowCount} 
+		b.title,COUNT(c.app_user_id) as commentTimesUser,
+		b.browse_times as browseTimes,b.download_times as downloadTimes,
+		b.upload_datetime as uploadDatetime,b.avg_score as avgScore
+		from 
+		document b	
+		left join doc_comment c on (b.document_id=c.document_id and c.comment_status=1)
+		where
+		b.upload_app_user_id=${id} 
+		and b.document_status=3 
+		<if test="startNum >0" >
+		and b.document_id not in 
+		(
+		select 
+		top ${startNum} 
+		bb.document_id
+		from 
+		document bb	
+		left join doc_comment cc on (bb.document_id=cc.document_id and cc.comment_status=1)
+		where
+		bb.upload_app_user_id=${id} 
+		and bb.document_status=3 
+		group by 
+		bb.title,bb.browse_times,bb.download_times,bb.upload_datetime,bb.avg_score,bb.document_id 
+		order by 
+		bb.upload_datetime desc
+		)
+		</if>
+		group by 
+		b.title,b.browse_times,b.download_times,b.upload_datetime,b.avg_score,b.document_id 
+		order by 
+		b.upload_datetime desc
+	</select>  
+	<select id="getCount" resultType="Integer" >
+		select 
+		count(a.document_id) 
+		from 
+		document a	
+		where
+		a.upload_app_user_id=${id} 
+		and a.document_status=3 
+	</select>
+	<select id="getRecordCount" resultType="Integer">
+		select count(A.app_user_id)
+		from 
+		app_user A
+		where 1=1
+		<if test="realName != null and realName !=''">
+		and A.realname like #{realName} 
+		</if>
+	</select>
+	<update id="updateAppUserById">
+		update app_user
+	<set>
+		realname=#{realname,jdbcType=VARCHAR},
+		mobile=#{mobile,jdbcType=VARCHAR},
+		email=#{email,jdbcType=VARCHAR},
+		gender=#{gender,jdbcType=INTEGER}
+	</set>
+		where app_user_id=#{appUserId,jdbcType=INTEGER}
+	</update>
+	
+	
+	<update id="modifyAppUserStatus">
+		update app_user
+    <set>
+		account_status = #{accountStatus,jdbcType=INTEGER},
+    </set>
+		where app_user_id=#{appUserId,jdbcType=INTEGER}
+	</update>
+</mapper>

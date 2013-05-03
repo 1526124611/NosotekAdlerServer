@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.roiland.cms.persistence.dao.web.ConfirmKnowledgeDao">
+<!--  <resultMap id="BaseResultMap1" type="com.roiland.cms.dto.web.KnowledgeWebDto" >
+ 	<id column="knowledge_id" property="knowledgeId" jdbcType="INTEGER" />
+ 	<result column="status" property="knowledgeStatus" jdbcType="INTEGER" />
+ 	<result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="knowledge_catalog" property="knowledgeCatalog" jdbcType="INTEGER" />
+    <result column="create_appuserId" property="createAppuserId" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="DATETIME" />
+    <result column="score" property="score" jdbcType="INTEGER" />
+  </resultMap> -->
+  
+	<select id="getQueryApprovalList" resultType="com.roiland.cms.dto.web.KnowledgeWebDto">
+		select 
+		top ${rowCount} 
+		a.knowledge_id as knowledgeId,
+		a.status as knowledgeStatus,
+		a.content as content,
+		a.knowledge_catalog as knowledgeCatalog,
+		b.realname as createAppuser,
+		a.create_date as createDate,
+		a.score as score 
+		from 
+		knowledge a 
+		left join app_user b on a.create_appuser_id=b.app_user_id 
+		where 
+		a.status=2 
+		<if test="startNum >0" >
+		and a.knowledge_id not in
+		(
+		select 
+		top ${startNum} 
+		aa.knowledge_id 
+		from 
+		knowledge aa 
+		left join app_user bb on aa.create_appuser_id=bb.app_user_id 
+		where 
+		aa.status=2 
+		order by aa.create_date desc
+		)
+		</if>
+		order by a.create_date desc
+	</select>
+	
+	<select id="getRecordCount" resultType="Integer" >
+		select count(knowledge_id) from knowledge where status=2
+	</select>
+	
+	<select id="getDicValueById" resultType="String" >
+		select 
+			dict_value 
+		from 
+			dict d 
+		where 
+			d.dict_key=#{dictKey} 
+			and d.dict_id=2 
+	</select>
+</mapper>

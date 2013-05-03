@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.roiland.cms.persistence.dao.web.DictManagementDao">
+	
+	<select id="getDictList" resultType="com.roiland.cms.dto.web.DictWebDto">
+		select 
+		top ${rowCount} 
+		a.dict_id as dictId,a.dict_key as dictKey,a.dict_value as dictValue
+		from 
+		dict a 
+		where a.dict_id=#{dictId}
+		and a.status =1 
+		<if test="startNum >0" >
+		and a.dict_key not in 
+		(
+		select 
+		top ${startNum} 
+		aa.dict_key as dictKey
+		from 
+		dict aa
+		where aa.dict_id=#{dictId}
+		and aa.status=1
+		)
+		</if>
+	</select>
+	<select id="getDictByKey" resultType="com.roiland.cms.dto.web.DictWebDto">
+		select
+		a.dict_id as dictId,a.dict_key as dictKey,a.dict_value as dictValue,a.key_desc as keyDesc,
+		a.status as status,a.parent_dict_id as parentDictId,a.parent_key_id as parentKeyId
+		from
+		dict a
+		where a.dict_id=#{dictId} and a.dict_key=#{dictKey}
+	</select>
+	<insert id="insertDict">
+		insert into dict(dict_id,dict_key,dict_value,key_desc,status) 
+		values(
+            #{dictId,jdbcType=INTEGER},
+	        #{dictKey,jdbcType=INTEGER},
+	        #{dictValue,jdbcType=VARCHAR},
+	        #{keyDesc,jdbcType=VARCHAR},
+	        #{status,jdbcType=INTEGER}
+			)
+	</insert>
+	
+	<update id="updateDict">
+		update dict
+    <set>
+		dict_value = #{dictValue,jdbcType=VARCHAR},
+		key_desc = #{keyDesc,jdbcType=VARCHAR},
+    </set>
+		where  dict_id=#{dictId,jdbcType=INTEGER} and dict_key=#{dictKey,jdbcType=INTEGER}
+	</update>
+	
+	<update id="delDict">
+		 update dict
+	<set>
+       status =2
+    </set>
+    where  dict_id=#{dictId} and dict_key=#{dictKey}
+	</update>
+	
+	<select id="getRecordCount" resultType="Integer" >
+		select count(a.dict_id) 
+		from dict a 
+		where a.dict_id=#{dictId}
+		and a.status =1
+	</select>
+	
+	<select id="getDictNextKey" resultType="Integer">
+		select 
+		top 1 
+		a.dict_key+1 as nextId 
+		from 
+		dict a 
+		where a.dict_id=#{dictId}
+		order by a.dict_key desc 
+	</select>
+</mapper>

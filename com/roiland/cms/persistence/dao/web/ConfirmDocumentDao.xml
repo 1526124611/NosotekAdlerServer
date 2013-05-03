@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.roiland.cms.persistence.dao.web.ConfirmDocumentDao">
+ <resultMap id="BaseResultMap" type="com.roiland.cms.dto.web.DocumentWebDto" >
+ 	<id column="document_id" property="documentId" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="document_type" property="documentType" jdbcType="VARCHAR" />
+    <result column="realname" property="uploadUserName" jdbcType="VARCHAR" />
+    <result column="upload_datetime" property="uploadDatetime" jdbcType="DATE" />
+    <result column="comment_times" property="commentTimes" jdbcType="INTEGER" />
+    
+  </resultMap>
+	<select id="queryUnapprovedList" resultMap="BaseResultMap" >
+		select 
+		top ${rowCount} 
+		a.document_id,a.title,a.document_type,b.realname,a.upload_datetime,a.comment_times 
+		from 
+		document a,app_user b 
+		where 
+		a.document_status=4 and a.upload_app_user_id=b.app_user_id 
+		<if test="startNum >0" >
+		and a.document_id not in 
+		(
+		select 
+		top ${startNum} 
+		c.document_id 
+		from 
+		document c,app_user d 
+		where 
+		c.document_status=4 and c.upload_app_user_id=d.app_user_id 
+		order by c.upload_datetime desc
+		)
+		</if>
+		order by a.upload_datetime desc
+	</select> 
+  	
+  	<select id="getRecordCount" resultType="Integer" >
+		select count(a.document_id) 
+		from 
+		document a,app_user b 
+		where 
+		a.document_status=4
+		and a.upload_app_user_id=b.app_user_id
+	</select>
+</mapper>
